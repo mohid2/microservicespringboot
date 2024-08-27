@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/booking_service
+    username: postgres
+    password: 123456789
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+server:
+  port: 0
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+      base-path: /actuator/inventory

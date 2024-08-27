@@ -1,42 +1,89 @@
 package app.vercel.mohammedelyousfi.booking_service.domain.service;
 
-import app.vercel.mohammedelyousfi.booking_service.domain.dto.BookingDTO;
+import app.vercel.mohammedelyousfi.booking_service.client.CarClient;
+import app.vercel.mohammedelyousfi.booking_service.client.UserClient;
 
-import app.vercel.mohammedelyousfi.booking_service.presistance.mapper.BookingMapper;
-import app.vercel.mohammedelyousfi.booking_service.presistance.repository.BookingRepository;
+import app.vercel.mohammedelyousfi.booking_service.client.model.Car;
+import app.vercel.mohammedelyousfi.booking_service.client.model.User;
+import app.vercel.mohammedelyousfi.booking_service.domain.exception.BookingNotFoundException;
+import app.vercel.mohammedelyousfi.booking_service.domain.exception.BusinessException;
+import app.vercel.mohammedelyousfi.booking_service.domain.model.BookingRequest;
+import app.vercel.mohammedelyousfi.booking_service.domain.model.BookingResponse;
+import app.vercel.mohammedelyousfi.booking_service.domain.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImpl implements IBookingService {
 
     private final BookingRepository bookingRepository;
-    private final BookingMapper bookingMapper;
+    private final CarClient carClient;
+    private final UserClient userClient;
 
     @Override
-    public BookingDTO getBookingById(Long bookingId) {
-        return bookingMapper.toBookingDTO(bookingRepository.findById(bookingId).orElse(null));
+    public BookingResponse getBookingById(Long bookingId) {
+        BookingResponse bookingResponse = bookingRepository.findBookingById(bookingId);
+        if (bookingResponse == null) {
+            throw new BookingNotFoundException("Booking not found");
+        }
+        return getBookingResponse(bookingResponse);
     }
 
     @Override
-    public Iterable<BookingDTO> getAllBookings() {
-        return bookingMapper.toBookingDTOList(bookingRepository.findAll());
-    }
-    @Override
-    public BookingDTO createBooking(BookingDTO bookingDTO) {
-        return bookingMapper.toBookingDTO(bookingRepository.save(bookingMapper.toBooking(bookingDTO)));
+    public BookingResponse createBooking(BookingRequest bookingRequest) {
+        Car car = carClient.getCarById(bookingRequest.getCarId()).orElseThrow(() -> new BusinessException("Booking failed. Car with id " + bookingRequest.getCarId() + " not found"));
+        User user = userClient.getUserById(bookingRequest.getUserId()).orElseThrow(() -> new BusinessException("Booking failed. User with id " + bookingRequest.getUserId() + " not found"));
+
+            if(car.isAvailable()) {
+                carClient.setAvailableCar(bookingRequest.getCarId());
+            bookingRequest.setAmount(BigDecimal.valueOf(car.getPrice()*(
+                            bookingRequest.getPickupDate().until(bookingRequest.getReturnDate(), ChronoUnit.DAYS)+1)));
+            // Crear la reserva
+            BookingResponse bookingResponse = bookingRepository.createBooking(bookingRequest);
+            bookingResponse.setCar(car);
+            bookingResponse.setUser(user);
+
+            return getBookingResponse(bookingResponse);
+            }
+            throw new BusinessException("Booking failed. Car not available");
     }
 
     @Override
     public void deleteBooking(Long bookingId) {
-        bookingRepository.deleteById(bookingId);
+        bookingRepository.deleteBooking(bookingId);
     }
 
     @Override
-    public BookingDTO updateBooking(  Long bookingId,BookingDTO bookingDTO) {
-        return bookingMapper.toBookingDTO(bookingRepository.save(bookingMapper.toBooking(bookingDTO)));
+    public BookingResponse updateBooking(Long bookingId, BookingRequest bookingRequest) {
+        BookingResponse bookingResponse = bookingRepository.updateBooking(bookingId, bookingRequest);
+        if(bookingResponse == null) {
+            throw new BookingNotFoundException("Booking not found");
+        }
+        return getBookingResponse(bookingResponse);
     }
 
+
+
+
+    @Override
+    public List<BookingResponse> getBookingsByUserId(Long userId) {
+        List<BookingResponse> bookingResponses = bookingRepository.findAllBookingsByUserId(userId);
+        return bookingResponses.stream()
+                .peek(this::getBookingResponse)
+                .toList();
+    }
+
+    private BookingResponse getBookingResponse(BookingResponse bookingResponse) {
+        Car car = carClient.getCarById(bookingResponse.getCarId()).orElseThrow(() -> new BusinessException("Booking failed. Car with id " + bookingResponse.getCarId() + " not found"));
+        User user = userClient.getUserById(bookingResponse.getUserId()).orElseThrow(() -> new BusinessException("Booking failed. User with id " + bookingResponse.getUserId() + " not found"));
+        bookingResponse.setCar(car);
+        bookingResponse.setUser(user);
+        return bookingResponse;
+    }
 
 }

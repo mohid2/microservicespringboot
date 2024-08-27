@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title >Notificación de correo</title>
+</head>
+<body>
+<h1 th:text="${userNotification.message}"></h1>
+<h2>Detalles del Usuario</h2>
+<ul>
+    <li><strong>Nombre:</strong> <span th:text="${userNotification.userResponse.firstname} + ' ' + ${userNotification.userResponse.lastname}"></span></li>
+    <li><strong>Nombre de Usuario:</strong> <span th:text="${userNotification.userResponse.username}"></span></li>
+    <li><strong>Email:</strong> <span th:text="${userNotification.userResponse.email}"></span></li>
+    <li><strong>Fecha de Nacimiento:</strong> <span th:text="${userNotification.userResponse.dateOfBirth}"></span></li>
+    <li><strong>Teléfono:</strong> <span th:text="${userNotification.userResponse.phoneNumber}"></span></li>
+</ul>
+
+<h2>Direcciones</h2>
+<ul>
+    <li th:each="address : ${userNotification.userResponse.address}">
+        <strong>Dirección:</strong>
+        <span th:text="${address.street} + ', ' + ${address.city} + ', ' + ${address.state} + ', ' + ${address.country} + ' ' + ${address.zipCode}"></span>
+    </li>
+</ul>
+</body>
+</html>

@@ -1,16 +1,20 @@
 package app.vercel.mohammedelyousfi.booking_service.domain.service;
 
-import app.vercel.mohammedelyousfi.booking_service.domain.dto.BookingDTO;
+import app.vercel.mohammedelyousfi.booking_service.domain.model.BookingRequest;
+import app.vercel.mohammedelyousfi.booking_service.domain.model.BookingResponse;
+
+import java.util.List;
 
 public interface IBookingService {
-    BookingDTO getBookingById(Long bookingId);
 
-    Iterable<BookingDTO> getAllBookings();
 
-    BookingDTO createBooking(BookingDTO booking);
+    BookingResponse getBookingById(Long bookingId);
+    BookingResponse createBooking(BookingRequest booking);
 
     void deleteBooking(Long bookingId);
 
-    BookingDTO updateBooking( Long bookingId,BookingDTO bookingDTO);
+    BookingResponse updateBooking(Long bookingId, BookingRequest bookingRequest);
+
+    List<BookingResponse> getBookingsByUserId(Long userId);
 
 }

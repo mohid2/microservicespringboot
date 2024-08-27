@@ -5,6 +5,7 @@ package app.vercel.mohammedelyousfi.car_service.persistence.entity;
 import app.vercel.mohammedelyousfi.car_service.util.enums.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Persistent;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,8 +28,6 @@ public class Car implements Serializable {
 
     @Id
     private String chassisSerialNumber;
-
-    private Long motorId;
 
     private CarBrand carBrand;
 
@@ -63,10 +62,7 @@ public class Car implements Serializable {
 
     @DBRef
     private List<Image> imagePaths;
-
-
     @DBRef
     private Motor motor;
-
 }
 

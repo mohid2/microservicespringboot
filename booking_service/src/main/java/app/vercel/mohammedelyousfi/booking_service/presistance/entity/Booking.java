@@ -1,12 +1,16 @@
 package app.vercel.mohammedelyousfi.booking_service.presistance.entity;
 
-import app.vercel.mohammedelyousfi.booking_service.domain.dto.CarDTO;
-import app.vercel.mohammedelyousfi.booking_service.domain.dto.UserDTO;
+import app.vercel.mohammedelyousfi.booking_service.client.model.Car;
+import app.vercel.mohammedelyousfi.booking_service.client.model.User;
+import app.vercel.mohammedelyousfi.booking_service.util.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Persistent;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @ToString
 @Builder
@@ -25,21 +29,29 @@ public class Booking implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "car_id", nullable = false)
+    @Column(nullable = false)
     private String carId;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(nullable = false)
     private Long userId;
 
-    @Column(name = "pickup_date", nullable = false)
-    private String pickupDate;
+    @Column(nullable = false)
+    @Temporal(TemporalType.DATE)
+    private LocalDate pickupDate;
 
-    @Column(name = "pickup_time", nullable = false)
-    private String pickupTime;
+    @Temporal(TemporalType.DATE)
+    private LocalDate returnDate;
+
+    private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Transient
-    private CarDTO car;
+    private Car car;
 
     @Transient
-    private UserDTO user;
+    private User user;
+
+
 }

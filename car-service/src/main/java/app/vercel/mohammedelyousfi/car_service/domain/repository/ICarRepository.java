@@ -1,20 +1,24 @@
 package app.vercel.mohammedelyousfi.car_service.domain.repository;
 
-import app.vercel.mohammedelyousfi.car_service.domain.dto.CarDTO;
+import app.vercel.mohammedelyousfi.car_service.domain.model.CarResponse;
+import app.vercel.mohammedelyousfi.car_service.domain.model.CarRequest;
 
 import java.util.List;
 
 public interface ICarRepository {
 
-    List<CarDTO> getAllCars();
+    List<CarResponse> getAllCars();
 
-    CarDTO getCarById(String id);
+    CarResponse getCarById(String id);
 
     void deleteCarById(String id);
 
-    CarDTO updateCar(String id, CarDTO carDTO);
+    CarResponse updateCar(String id, CarRequest carRequest);
 
-    CarDTO createCar(CarDTO carDTO);
+    CarResponse createCar(CarRequest carRequest);
 
-    List<CarDTO> createAllCars(List<CarDTO> carDTOList);
+    List<CarResponse> createAllCars(List<CarRequest> carRequestList);
+
+    List<CarResponse> findByCategory(String category);
 }
+
