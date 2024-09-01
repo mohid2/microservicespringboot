@@ -1,13 +1,24 @@
+#spring:
+#  Profiles:
+#    active: native
+#  application:
+#    name: config-service
+#  cloud:
+#    config:
+#      server:
+#        native:
+#          search-locations: classpath:/config
 spring:
-  Profiles:
-    active: native
   application:
     name: config-service
   cloud:
     config:
       server:
-        native:
-          search-locations: classpath:/config
+        git:
+          uri: https://github.com/mohid2/microservicespringboot
+          search-paths: config-data
+          clone-on-start: true
+          default-label: master
 server:
   port: 8888
 

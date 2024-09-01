@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Confirmación de Reserva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .details, .car-details, .user-details {
+            margin: 20px 0;
+        }
+        .details p, .car-details p, .user-details p {
+            margin: 5px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="'¡Hola ' + ${bookingNotification.bookingResponse.user.firstname} + '! Reserva confirmada'"></h1>
+
+    <p th:text="${bookingNotification.message}"></p>
+
+    <div class="details">
+        <h2>Detalles de la Reserva</h2>
+        <p><strong>ID de Reserva:</strong> <span th:text="${bookingNotification.bookingResponse.id}"></span></p>
+        <p><strong>Fecha de Recogida:</strong> <span th:text="${bookingNotification.bookingResponse.pickupDate}"></span></p>
+        <p><strong>Fecha de Devolución:</strong> <span th:text="${bookingNotification.bookingResponse.returnDate}"></span></p>
+        <p><strong>Monto Total:</strong> <span th:text="${bookingNotification.bookingResponse.amount}"></span></p>
+        <p><strong>Duración Total de la Reserva (días):</strong> <span th:text="${bookingNotification.bookingResponse.totalBookingDuration}"></span></p>
+        <p><strong>Método de Pago:</strong> <span th:text="${bookingNotification.bookingResponse.paymentMethod}"></span></p>
+    </div>
+
+    <div class="car-details">
+        <h2>Detalles del Coche</h2>
+        <p><strong>Marca:</strong> <span th:text="${bookingNotification.bookingResponse.car.carBrand}"></span></p>
+        <p><strong>Modelo:</strong> <span th:text="${bookingNotification.bookingResponse.car.model}"></span></p>
+        <p><strong>Año del Modelo:</strong> <span th:text="${bookingNotification.bookingResponse.car.modelYear}"></span></p>
+        <p><strong>Color:</strong> <span th:text="${bookingNotification.bookingResponse.car.color}"></span></p>
+        <p><strong>Descripción:</strong> <span th:text="${bookingNotification.bookingResponse.car.description}"></span></p>
+        <p><strong>Precio:</strong> <span th:text="${bookingNotification.bookingResponse.car.price}"></span></p>
+        <p><strong>KM:</strong> <span th:text="${bookingNotification.bookingResponse.car.km}"></span></p>
+        <p><strong>Transmisión:</strong> <span th:text="${bookingNotification.bookingResponse.car.transmission}"></span></p>
+        <p><strong>Peso:</strong> <span th:text="${bookingNotification.bookingResponse.car.weight}"></span></p>
+        <p><strong>Número de Puertas:</strong> <span th:text="${bookingNotification.bookingResponse.car.numberDoors}"></span></p>
+        <p><strong>Número de Asientos:</strong> <span th:text="${bookingNotification.bookingResponse.car.numberSeats}"></span></p>
+        <p><strong>Tipo de Tracción:</strong> <span th:text="${bookingNotification.bookingResponse.car.traction}"></span></p>
+        <p><strong>Tipo de Dirección:</strong> <span th:text="${bookingNotification.bookingResponse.car.steering}"></span></p>
+
+        <div th:if="${bookingNotification.bookingResponse.car.imagePaths != null}">
+            <h3>Imágenes del Coche</h3>
+            <ul>
+                <li th:each="image : ${bookingNotification.bookingResponse.car.imagePaths}">
+                    <img th:src="@{${image.imagePath}}" alt="Imagen del coche" style="max-width: 200px; height: auto;"/>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="user-details">
+        <h2>Detalles del Usuario</h2>
+        <p><strong>Nombre:</strong> <span th:text="${bookingNotification.bookingResponse.user.firstname} + ' ' + ${bookingNotification.bookingResponse.user.lastname}"></span></p>
+        <p><strong>Correo Electrónico:</strong> <span th:text="${bookingNotification.bookingResponse.user.email}"></span></p>
+        <p><strong>Teléfono:</strong> <span th:text="${bookingNotification.bookingResponse.user.phoneNumber}"></span></p>
+        <p><strong>Fecha de Nacimiento:</strong> <span th:text="${bookingNotification.bookingResponse.user.dateOfBirth}"></span></p>
+        <h3>Dirección(es)</h3>
+        <div th:each="address : ${bookingNotification.bookingResponse.user.address}">
+            <p><strong>Calle:</strong> <span th:text="${address.street}"></span></p>
+            <p><strong>Ciudad:</strong> <span th:text="${address.city}"></span></p>
+            <p><strong>Estado:</strong> <span th:text="${address.state}"></span></p>
+            <p><strong>País:</strong> <span th:text="${address.country}"></span></p>
+            <p><strong>Código Postal:</strong> <span th:text="${address.zipCode}"></span></p>
+            <hr/>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Gracias por elegir nuestro servicio. Si tienes alguna pregunta, no dudes en contactarnos.</p>
+    </div>
+</div>
+</body>
+</html>

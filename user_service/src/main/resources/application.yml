@@ -1,20 +1,11 @@
+#spring:
+#  application:
+#    name: user-service
+#  config:
+#    import: optional:configserver:http://localhost:8888
 spring:
   application:
     name: user-service
-  config:
-    import: optional:configserver:http://localhost:8888
-
-  kafka:
-    producer:
-      bootstrap-servers: localhost:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      retries: 1
-      properties:
-        spring.json.type.mapping: UserNotification:app.vercel.mohammedelyousfi.user_service.domain.model.UserNotification
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+  cloud:
+    config:
+      uri: http://localhost:8888
