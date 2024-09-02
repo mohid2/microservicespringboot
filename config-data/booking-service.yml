@@ -7,14 +7,14 @@ spring:
     hibernate:
       ddl-auto: create
 
-    kafka:
-      producer:
-        bootstrap-servers: localhost:9092
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-        retries: 1
-        properties:
-          spring.json.type.mapping: BookingNotification:app.vercel.mohammedelyousfi.booking_service.domain.model.BookingNotification
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 1
+      properties:
+        spring.json.type.mapping: app.vercel.mohammedelyousfi.booking_service.domain.model.BookingNotification
 
 server:
   port: 0

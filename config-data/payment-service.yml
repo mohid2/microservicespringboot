@@ -14,7 +14,7 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       retries: -1
       properties:
-        spring.json.type.mapping: PaymentNotification:app.vercel.mohammedelyousfi.payment_service.domain.model.BookingNotification
+        spring.json.type.mapping: PaymentNotification:app.vercel.mohammedelyousfi.payment_service.domain.model.PaymentNotification
 
 server:
   port: 0

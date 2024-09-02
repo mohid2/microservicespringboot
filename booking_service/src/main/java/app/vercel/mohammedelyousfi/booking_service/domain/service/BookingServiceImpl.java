@@ -59,7 +59,7 @@ public class BookingServiceImpl implements IBookingService {
                                 .build())
                         .setHeader(KafkaHeaders.TOPIC,"booking-created")
                         .build();
-            kafkaTemplate.send(message );
+            kafkaTemplate.send(message);
             return getBookingResponse(bookingResponse);
             }
             throw new BusinessException("Booking failed. Car not available");
